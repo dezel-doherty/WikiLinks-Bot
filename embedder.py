@@ -10,11 +10,3 @@ def GetSimilarity(query, strings):
 
 def GetMostSimilar(query, strings):
     return max(GetSimilarity(query, strings), key=lambda pair: pair[1])
-
-result = GetMostSimilar("It was a sunny day", [
-    "The weather is lovely today.",
-    "It's so sunny outside!",
-    "He drove to the stadium.",
-])
-
-print(result)
