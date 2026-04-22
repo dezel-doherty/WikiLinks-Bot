@@ -11,6 +11,3 @@ def get_similarity(query, strings):
 
 def get_n_most_similar(query, strings, size):
     return heapq.nlargest(size, get_similarity(query, strings), key=lambda pair: pair[1])
-
-def get_most_similar(query, strings):
-    return get_n_most_similar(query, strings, 1)[0]

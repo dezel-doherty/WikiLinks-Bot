@@ -1,9 +1,8 @@
 import httpx
-from embedder import *
+from embedder import get_n_most_similar
 
 API_URL = "https://en.wikipedia.org/w/api.php"
 USER_AGENT = "wikilinks-script/1.0 (github.com)"
-BATCH_SIZE = 50
 
 def query_batch(client, titles, include_links=False):
     params = {
@@ -57,6 +56,8 @@ def get_page_links(page_title):
 def get_n_closest_page(page, target_page, page_number):
     current_links = get_page_links(page["title"])
 
+    if not current_links:
+        return []
     if target_page["title"] in current_links:
         return [target_page]
 
@@ -68,39 +69,4 @@ def get_n_closest_page(page, target_page, page_number):
 
     by_title = {p["title"]: p for p in fetched}
     return [by_title[t] for t in titles if t in by_title]
-    
-def get_closest_page(page, target_page):
-    get_n_closest_page(page, target_page, 1)
-    
-    
-    
-    
-    
-if __name__ == "__main__":
-    starting_title = "Technical report"
-    destination_title = "British Standard Pipe"
-    
-    current_page = get_page(starting_title)
-    destination_page = get_page(destination_title)
 
-    links = []
-    
-    print(starting_title)
-    
-    while current_page != destination_page:
-        n_most_similar = get_n_closest_page(current_page, destination_page, 10)
-        most_similar = n_most_similar[0]
-        
-        if destination_page in n_most_similar:
-            current_page = destination_page
-        else:
-            if most_similar["title"] in links:
-                rank = 1
-                while current_page["title"] in links:
-                    current_page = n_most_similar[rank]
-                    rank += 1           
-            else:
-                current_page = most_similar
-            
-        links.append(current_page["title"])
-        print(current_page["title"])
